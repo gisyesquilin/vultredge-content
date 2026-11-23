@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>住宅IP代理常见故障排查：Shadowrocket配置与SOCKS5连接问题解决方案</title>
+</head>
+<body>
+<article>
+<h3>住宅IP代理故障排查完整指南</h3>
+<p>使用住宅IP代理时，连接失败、速度慢或频繁断线是最常见的问题。本文针对Shadowrocket配置和SOCKS5协议连接故障，提供系统化的排查方案。</p>
+<h3>核心故障类型与诊断方法</h3>
+<p>**连接超时问题**：首先检查代理服务器地址和端口是否正确。在Shadowrocket中，进入「配置」-「服务器」，验证IP格式（如192.168.1.1:1080）。测试方法：使用curl命令验证代理可达性 `curl -x socks5://proxy_ip:port https://ipinfo.io`。如果返回超时，问题通常出在网络层或服务商侧。<a href="https://vultredge.com/">VultrEdge住宅IP</a>提供99.9%在线率保证，有效避免此类问题。</p>
+<p>**认证失败排查**：SOCKS5协议支持用户名密码认证，配置错误会导致407错误。检查步骤：1) 确认用户名无特殊字符；2) 密码是否包含需要URL编码的符号（如@、#）；3) 在Shadowrocket的「认证」选项中，选择正确的认证方式（无认证/用户名密码）。</p>
+<h3>HTTP vs SOCKS5：协议选择的影响</h3>
+<p>许多用户混淆HTTP代理和SOCKS5代理配置。HTTP代理仅支持HTTP/HTTPS流量，而SOCKS5支持所有TCP/UDP协议。故障表现：使用HTTP代理配置访问非Web应用（如游戏、SSH）会失败。解决方案：在Shadowrocket中，针对全局代理需求选择SOCKS5类型。<a href="https://vultredge.com/">VultrEdge代理服务</a>同时支持HTTP和SOCKS5，低至$0.05/GB起，灵活切换无额外费用。</p>
+<h3>速度与稳定性优化</h3>
+<p>**DNS泄漏检测**：即使代理连接成功，DNS请求可能绕过代理导致真实IP暴露。测试方法：访问dnsleaktest.com检查DNS服务器归属。修复方案：在Shadowrocket「全局路由」中启用「代理DNS查询」。</p>
+<p>**IP池轮换配置**：住宅IP代理的核心优势是IP多样性，但配置不当会导致频繁使用同一IP被目标网站封禁。推荐策略：设置每5-10分钟自动轮换IP，或按请求数轮换。<a href="https://vultredge.com/">VultrEdge</a>的智能轮换系统可自动处理，无需手动干预。</p>
+<h3>高级故障处理技巧</h3>
+<p>遇到间歇性连接问题时，使用tcpdump或Wireshark抓包分析：`tcpdump -i any host proxy_ip -w capture.pcap`。重点检查TCP握手阶段是否有RST包，以及SOCKS5握手的认证响应码。对于企业级需求，建议使用支持故障转移的代理池方案，确保单点故障不影响业务连续性。</p>
+<hr>
+<h3>📚 相关阅读</h3>
+<p>• [住宅IP代理选择避坑指南：Sneaker Bot和静态代理的正确打开方式](https://telegra.ph/住宅IP代理选择避坑指南Sneaker-Bot和静态代理的正确打开方式-11-22)</p>
+<p>• [住宅IP代理选择避坑指南：Sneaker Bot和静态代理的正确打开方式](https://write.as/s2cv7krh9mgkj)</p>
+<hr>
+<p>🎁 访问 <a href="https://vultredge.com">VultrEdge官网</a> 领取 <strong>1GB免费住宅IP测试包</strong></p>
+
+</article>
+</body>
+</html>
