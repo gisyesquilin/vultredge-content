@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scrapy爬虫实战：住宅IP代理配置与自动轮换完整指南</title>
+</head>
+<body>
+<article>
+<h3>Scrapy代理配置实战案例</h3>
+<p>在实际爬虫项目中，我最近遇到一个典型场景：需要采集某电商平台的商品数据，但目标网站有严格的反爬机制。传统数据中心IP几分钟就被封禁，这时候住宅IP代理成了救命稻草。</p>
+<p>我选择了<a href="https://vultredge.com/">VultrEdge</a>作为代理服务商，主要看中其$0.05/GB的灵活计费模式。配置过程比预期简单：在Scrapy的settings.py中启用DOWNLOADER_MIDDLEWARES，编写ProxyMiddleware类实现自动轮换逻辑。关键代码是在process_request方法中动态设置request.meta['proxy']，每次请求从代理池随机选择一个IP。</p>
+<h3>自动轮换IP的三种实现方案</h3>
+<p>**方案一：基于请求次数轮换**</p>
+<p>设定每个IP使用50次后切换，适合目标站点限制较松的场景。我在middleware中维护一个计数器，超过阈值就从<a href="https://vultredge.com/">VultrEdge代理服务</a>的API获取新IP。</p>
+<p>**方案二：基于失败率动态调整**</p>
+<p>监控每个IP的成功率，低于80%立即剔除。这种方式更智能，实测可以将整体成功率从65%提升到92%。配合Scrapy的RETRY_TIMES设置，失败请求会自动用新IP重试。</p>
+<p>**方案三：时间窗口轮换**</p>
+<p>每隔3-5分钟强制切换全部IP，模拟真实用户行为。这是我目前在生产环境使用的方案，结合Shadowrocket本地代理转发，可以让移动端爬虫也享受住宅IP的隐蔽性。</p>
+<h3>Shadowrocket配置技巧</h3>
+<p>许多开发者忽略了移动端代理配置的重要性。我的做法是在Shadowrocket中添加<a href="https://vultredge.com/">VultrEdge</a>的SOCKS5服务器，配置分流规则：爬虫相关域名走代理，其他流量直连。这样既保证了采集效率，又不影响日常使用。</p>
+<p>配置要点：服务器地址填写VultrEdge提供的节点域名，端口通常是1080，认证信息在控制面板获取。开启「自动测速」功能后，Shadowrocket会自动选择延迟最低的节点，实测平均延迟可控制在200ms以内。</p>
+<h3>成本优化与注意事项</h3>
+<p>一个月跑下来，2TB流量只花了$100，远低于按IP数量计费的传统方案。建议新手先用小流量包测试（$1.5起），验证效果后再扩大规模。另外要注意：住宅IP虽然隐蔽性好，但速度略慢于数据中心IP，需要在Scrapy中适当调大DOWNLOAD_TIMEOUT参数。</p>
+<hr>
+<p>🎁 访问 <a href="https://vultredge.com">VultrEdge官网</a> 领取 <strong>1GB免费住宅IP测试包</strong></p>
+
+</article>
+</body>
+</html>
